@@ -1,5 +1,5 @@
-require "pry-byebug"
-require "colorize"
+require 'pry-byebug'
+require 'colorize'
 
 class Field
   attr_accessor :value
@@ -17,8 +17,6 @@ class Game < Field
     9.times { |x| @fields[x] = Field.new(x + 1) }
   end
 
-  public
-
   def display_grid
     print "
                 |       |
@@ -35,25 +33,23 @@ class Game < Field
   end
 
   def get_input
-    print "     Please choose your field: "
+    print '     Please choose your field: '
     # byebug
     input = gets.chomp.downcase.to_i
-    if (input.between?(1, 9))
-      if (@fields[input - 1].value == "O".green || @fields[input - 1].value == "X".red)
-        return "Wrong input!"
+    if input.between?(1, 9)
+      if @fields[input - 1].value == 'O'.green || @fields[input - 1].value == 'X'.red
+        'Wrong input!'
       else
-        return input
+        input
       end
     else
-      return "Wrong input!"
+      'Wrong input!'
     end
   end
 
   def computer_play
     computer_pick = Random.rand(1..9).floor
-    while (@fields[computer_pick - 1].value.class == String) do
-      computer_pick = Random.rand(1..9).floor
-    end
+    computer_pick = Random.rand(1..9).floor while @fields[computer_pick - 1].value.instance_of?(String)
     computer_pick
   end
 
@@ -64,17 +60,17 @@ class Game < Field
     # Check rows
     loop do
       # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      row = @fields[(i..z)].all? { |el|
-        el.value == "O".green
-      } || @fields[(i..z)].all? { |el|
-             el.value == "X".red
-           }
-      if (row == true)
-        if (@fields[i].value == "O".green)
-          @who_won = "You won!"
-        elsif (@fields[i].value == "X".red
-              )
-          @who_won = "You lose!"
+      row = @fields[(i..z)].all? do |el|
+        el.value == 'O'.green
+      end || @fields[(i..z)].all? do |el|
+               el.value == 'X'.red
+             end
+      if row == true
+        if @fields[i].value == 'O'.green
+          @who_won = 'You won!'
+        elsif @fields[i].value == 'X'.red
+
+          @who_won = 'You lose!'
         end
         return row
       end
@@ -88,15 +84,15 @@ class Game < Field
 
     # Check columns
     loop do
-      column = @fields[(i..z).step(3)].all? { |el| el.value == "O".green } || @fields[(i..z).step(3)].all? { |el|
-        el.value == "X".red
-      }
-      if (column == true)
-        if (@fields[i].value == "O".green)
-          @who_won = "You won!"
-        elsif (@fields[i].value == "X".red
-              )
-          @who_won = "You lose!"
+      column = @fields[(i..z).step(3)].all? { |el| el.value == 'O'.green } || @fields[(i..z).step(3)].all? do |el|
+        el.value == 'X'.red
+      end
+      if column == true
+        if @fields[i].value == 'O'.green
+          @who_won = 'You won!'
+        elsif @fields[i].value == 'X'.red
+
+          @who_won = 'You lose!'
         end
         return column
       end
@@ -111,15 +107,15 @@ class Game < Field
     count = 0
     # Check diagonals
     loop do
-      diagonal = @fields[(i..z).step(c)].all? { |el| el.value == "O".green } || @fields[(i..z).step(c)].all? { |el|
-        el.value == "X".red
-      }
-      if (diagonal == true)
-        if (@fields[4].value == "O".green)
-          @who_won = "You won!"
-        elsif (@fields[4].value == "X".red
-              )
-          @who_won = "You lose!"
+      diagonal = @fields[(i..z).step(c)].all? { |el| el.value == 'O'.green } || @fields[(i..z).step(c)].all? do |el|
+        el.value == 'X'.red
+      end
+      if diagonal == true
+        if @fields[4].value == 'O'.green
+          @who_won = 'You won!'
+        elsif @fields[4].value == 'X'.red
+
+          @who_won = 'You lose!'
         end
         return diagonal
       end
@@ -130,27 +126,27 @@ class Game < Field
       break if count == 2
     end
 
-    if (@fields.none? { |d| d.value.class == Integer })
+    if @fields.none? { |d| d.value.instance_of?(Integer) }
 
       @who_won = "It's a Draw!"
       return true
     end
-    return false
+    false
   end
 
   def round
     check_player_win = false
     pick = get_input
-    while (pick == "Wrong input!") do
+    while pick == 'Wrong input!'
       puts "      #{pick}"
       pick = get_input
     end
-    @fields[pick - 1].value = "O".green
+    @fields[pick - 1].value = 'O'.green
 
     check_player_win = check?
 
-    if (check_player_win == false && @fields.any? { |d| d.value.class == Integer })
-      @fields[computer_play - 1].value = "X".red
+    if check_player_win == false && @fields.any? { |d| d.value.instance_of?(Integer) }
+      @fields[computer_play - 1].value = 'X'.red
     end
 
     @finished_game = check?
@@ -158,9 +154,7 @@ class Game < Field
   end
 
   def play_game
-    until (@finished_game) do
-      round
-    end
+    round until @finished_game
 
     puts @who_won
   end
